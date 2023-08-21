@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "@app/authentication": [
+        "libs/authentication/src"
+      ],
+      "@app/authentication/*": [
+        "libs/authentication/src/*"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/exception": [
+        "libs/exception/src"
+      ],
+      "@app/exception/*": [
+        "libs/exception/src/*"
+      ],
+      "@app/health-check": [
+        "libs/health-check/src"
+      ],
+      "@app/health-check/*": [
+        "libs/health-check/src/*"
+      ],
+      "@app/starter": [
+        "libs/starter/src"
+      ],
+      "@app/starter/*": [
+        "libs/starter/src/*"
+      ],
+      "@app/util": [
+        "libs/util/src"
+      ],
+      "@app/util/*": [
+        "libs/util/src/*"
+      ],
+      "@app/describe": [
+        "libs/describe/src"
+      ],
+      "@app/describe/*": [
+        "libs/describe/src/*"
+      ]
+    }
+  }
+}

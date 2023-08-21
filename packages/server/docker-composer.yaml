@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  server:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      ENV: production
+      PG_URL: postgresql://user:password@db:5432/dmc?schema=public
+      AUTHENTICATION_JWT_HEADER_KEY: authorization
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: dmc

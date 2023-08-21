@@ -1,0 +1,67 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ] 
+  pull_request_target:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+#
+#
+#    - name: Build the Docker image for server
+#      run: docker build ./packages/server --tag tours-travers-backend:latest --tag gabrythe23/tour-traders-backend:latest --tag tours-travers-backend:$(date +'%Y-%m-%d')
+#      # push to docker hub
+#
+#
+#    - name: Push the Docker image to Docker Hub for server
+#      run: |
+#        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+#        docker push gabrythe23/tour-traders-backend:latest
+
+
+
+    # step for create commit and tag for new release named server-v1.0.0 and common-v1.0.0
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+    - name: Configure Git
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "GitHub Actions"
+    - name: Go to master branch
+      run: |
+        git checkout master 
+    - name: Run yarn patch package server
+      run: yarn patch
+      working-directory: ./packages/server
+    - name: Run yarn install package common
+      run: yarn install
+      working-directory: ./packages/common
+    - name: Run yarn generate:openapi package common
+      run: yarn generate:openapi
+      working-directory: ./packages/common
+    - name: Run yarn patch package common
+      run: yarn patch
+      working-directory: ./packages/common
+
+    - name: Configure Git
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "GitHub Actions"
+    - name: Create tag and commit for release
+      run: |   
+        git checkout master
+        git commit -am "build-v$(cat ./packages/server/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')"
+        git push
+        git tag build-v$(cat ./packages/server/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+        git push --tags 

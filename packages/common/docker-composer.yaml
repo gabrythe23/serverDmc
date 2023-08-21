@@ -1,0 +1,12 @@
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-dmc-server
+    ports:
+      - "9000:8080"
+    volumes:
+      - ./api:/usr/share/nginx/html/api
+    environment:
+      URLS: "[
+      { url: \"./api/main-definition.yml\", name: \"DMC SERVER\" }, 
+]"

@@ -1,0 +1,11 @@
+{
+  "name": "server-workspace",
+  "version": "1.0.0",
+  "repository": "https://github.com/marcomichielon/serverDmc.git",
+  "author": "Gabry <gabrielepartiti+github@icloud.com>",
+  "license": "MIT",
+    "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

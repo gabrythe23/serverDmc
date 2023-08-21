@@ -1,0 +1,15 @@
+{
+  "name": "@dmc/common",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "generate:openapi": "./node_modules/.bin/openapi generate -i api/main-definition.yml -o ./src",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "openapi-typescript-codegen": "^0.23.0"
+  }
+}

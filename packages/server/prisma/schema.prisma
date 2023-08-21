@@ -1,0 +1,307 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PG_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NOT_SPECIFIED
+}
+
+enum Type {
+  B2C
+  B2B
+  DMC
+  AGENCY
+  SYSTEM
+}
+
+enum PassengerType {
+  EVERYONE
+
+  SENIOR
+  ADULT
+  STUDENT
+  YOUTH
+  CHILD
+  INFANT
+
+  DISABLED
+}
+
+enum Currency {
+  EUR
+  USD
+  GBP
+  CHF
+}
+
+model User {
+  id        String    @id @default(cuid())
+  password  String
+  email     String
+  name      String
+  lastname  String
+  birthday  DateTime?
+  sex       Gender
+  image     String
+  enabled   Boolean   @default(true)
+  type      Type
+  lastLogin DateTime?
+
+  addresses    Address[]
+  contacts     Contact[]
+  createdFees  Fee[]
+  creditCards  CreditCard[]
+  toursCreated Tour[]
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Company {
+  id                    String  @id @default(cuid())
+  logo                  String
+  name                  String
+  email                 String
+  type                  Type
+  vatNumberOrFiscalCode String
+  enabled               Boolean @default(true)
+
+  addresses   Address[]
+  users       User[]
+  contacts    Contact[]
+  creditCards CreditCard[]
+  tours       Tour[]
+
+  fee   Fee?    @relation(fields: [feeId], references: [id])
+  feeId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Contact {
+  id                String  @id @default(cuid())
+  phoneNumber       String
+  mobilePhoneNumber String
+  email             String
+  main              Boolean @default(false)
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model TourImage {
+  id   String  @id @default(cuid())
+  url  String
+  main Boolean @default(false)
+
+  tour   Tour   @relation(fields: [tourId], references: [id])
+  tourId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model TourTraveller {
+  id String @id @default(cuid())
+
+  main    Boolean       @default(false)
+  enabled Boolean       @default(true)
+  type    PassengerType @default(EVERYONE)
+
+  tour                   Tour?                   @relation(fields: [tourId], references: [id])
+  tourId                 String?
+  tourTravellerInfoDates TourTravellerInfoDate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model TourTravellerInfoDate {
+  tourDate          TourDate      @relation(fields: [tourDateId], references: [id])
+  tourDateId        String
+  tourPassengerInfo TourTraveller @relation(fields: [tourTravellerId], references: [id])
+  tourTravellerId   String
+
+  price    Float
+  discount Float    @default(0)
+  currency Currency @default(EUR)
+  max      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+
+  @@id([tourDateId, tourTravellerId])
+}
+
+model TourDate {
+  id String @id @default(cuid())
+
+  tourTravellerInfoDates TourTravellerInfoDate[]
+
+  dateStart DateTime
+  dateEnd   DateTime
+
+  enabled Boolean @default(true)
+
+  tour   Tour   @relation(fields: [tourId], references: [id])
+  tourId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model TourItienary {
+  id String @id @default(cuid())
+
+  day         Int
+  title       String
+  description String
+
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId Int?
+  latitude  Float?
+  longitude Float?
+
+  tour   Tour   @relation(fields: [tourId], references: [id])
+  tourId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Tour {
+  id String @id @default(cuid())
+
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId Int?
+  city      String?
+
+  name        String
+  description String
+  travellers  TourTraveller[]
+  images      TourImage[]
+  dates       TourDate[]
+  itienary    TourItienary[]
+
+  enabled  Boolean @default(true)
+  duration Int
+
+  userCreator   User    @relation(fields: [userCreatorId], references: [id])
+  userCreatorId String
+  company       Company @relation(fields: [companyId], references: [id])
+  companyId     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  address    String
+  postalCode String
+  country    String
+  region     String
+  state      String
+  main       Boolean @default(false)
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Fee {
+  id     String  @id @default(cuid())
+  amount Float
+  main   Boolean @default(false)
+  name   String
+
+  userCreator   User      @relation(fields: [userCreatorId], references: [id])
+  userCreatorId String
+  companies     Company[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model CreditCard {
+  id              String  @id @default(cuid())
+  circuit         String
+  number          String
+  expirationYear  String
+  expirationMonth String
+  cvc             String
+  main            Boolean @default(false)
+  cardHolder      String
+  enabled         Boolean @default(true)
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+}
+
+model Country {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  alpha2Code             String
+  alpha3Code             String
+  iso3166Numeric2Code    String
+  code                   String
+  region                 String
+  subRegion              String
+  intermediateRegion     String
+  regionCode             String
+  subRegionCode          String
+  intermediateRegionCode String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deleted   Boolean  @default(false)
+
+  TourItienary TourItienary[]
+  Tour         Tour[]
+}
+
+model InvalidatedToken {
+  id        String   @id @default(cuid())
+  token     String
+  createdAt DateTime @default(now())
+  deleted   Boolean  @default(false)
+}

@@ -1,0 +1,534 @@
+openapi: 3.0.0
+paths:
+  /api/auth/login:
+    post:
+      operationId: AuthController_login
+      summary: Login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDto"
+      responses:
+        "201":
+          description: ""
+      tags:
+        &a1
+        - auth
+  /api/auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      summary: Refresh access token
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: *a1
+  /api/auth/logout:
+    post:
+      operationId: AuthController_logout
+      summary: Logout
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: *a1
+      security:
+        - cookie: []
+  /api/auth/me:
+    get:
+      operationId: AuthController_me
+      summary: Get current user
+      parameters: []
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponseDto"
+      tags: *a1
+      security:
+        - cookie: []
+  "/api/user/{userId}/password":
+    patch:
+      operationId: UserController_changePassword
+      summary: Change password
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserChangePasswordRequestDto"
+      responses:
+        "200":
+          description: ""
+      tags:
+        &a2
+        - user
+      security:
+        - cookie: []
+  "/api/user/{userId}":
+    get:
+      operationId: UserController_getUserById
+      summary: Get user by id
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGetResponseDto"
+      tags: *a2
+      security:
+        - cookie: []
+    post:
+      operationId: UserController_updateUser
+      summary: Update user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateRequestDto"
+      responses:
+        "201":
+          description: ""
+      tags: *a2
+      security:
+        - cookie: []
+  /api/user:
+    get:
+      operationId: UserController_getAllUsers
+      summary: Get all users
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            default: 20
+            type: number
+        - name: skip
+          required: false
+          in: query
+          schema:
+            default: 0
+            type: number
+        - name: text
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: order
+          required: false
+          in: query
+          schema:
+            $ref: "#/components/schemas/PaginationOrder"
+        - name: sort
+          required: false
+          in: query
+          schema:
+            $ref: "#/components/schemas/UserGetListRequestSort"
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGetListResponseDto"
+      tags: *a2
+      security:
+        - cookie: []
+  "/api/admin/user/{userId}/force-password-reset":
+    patch:
+      operationId: AdminUserController_forceNewPassword
+      summary: Force password reset
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserForceNewPasswordRequestDto"
+      responses:
+        "200":
+          description: ""
+      tags:
+        &a3
+        - admin
+        - user
+      security:
+        - cookie: []
+  "/api/admin/user/{userId}/type":
+    patch:
+      operationId: AdminUserController_changeType
+      summary: Change user type
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserChangeTypeRequestDto"
+      responses:
+        "200":
+          description: ""
+      tags: *a3
+      security:
+        - cookie: []
+  /api/admin/user:
+    put:
+      operationId: AdminUserController_createUser
+      summary: Create user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequestDto"
+      responses:
+        default:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCreateResponseDto"
+      tags: *a3
+      security:
+        - cookie: []
+  "/api/admin/user/{userId}/toggle-active":
+    patch:
+      operationId: AdminUserController_toggleActive
+      summary: Toggle user active
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags: *a3
+      security:
+        - cookie: []
+  "/api/admin/user/{userId}":
+    post:
+      operationId: AdminUserController_updateUser
+      summary: Update user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateRequestDto"
+      responses:
+        "201":
+          description: ""
+      tags: *a3
+      security:
+        - cookie: []
+    delete:
+      operationId: AdminUserController_deleteUser
+      summary: Delete user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags: *a3
+      security:
+        - cookie: []
+info:
+  title: main
+  description: ""
+  version: 1.0.0
+  contact: {}
+tags: []
+servers:
+  - url: http://localhost:3000
+    description: Local
+    variables: null
+components:
+  schemas:
+    LoginRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email
+        password:
+          type: string
+          description: Password
+      required:
+        - email
+        - password
+    Type:
+      type: string
+      enum:
+        - B2C
+        - B2B
+        - DMC
+        - AGENCY
+        - SYSTEM
+    MeCompanyResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        logo:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/Type"
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - logo
+        - name
+        - type
+        - createdAt
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+        - NOT_SPECIFIED
+    MeResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        lastname:
+          type: string
+        company:
+          $ref: "#/components/schemas/MeCompanyResponseDto"
+        birthday:
+          format: date-time
+          type: string
+        sex:
+          $ref: "#/components/schemas/Gender"
+        image:
+          type: string
+        type:
+          $ref: "#/components/schemas/Type"
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - email
+        - name
+        - lastname
+        - sex
+        - image
+        - type
+        - createdAt
+    UserChangePasswordRequestDto:
+      type: object
+      properties:
+        password:
+          type: string
+        newPassword:
+          type: string
+      required:
+        - password
+        - newPassword
+    UserGetResponseCompanyDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+      required:
+        - id
+        - name
+        - image
+    UserGetResponseDto:
+      type: object
+      properties:
+        birthday:
+          format: date-time
+          type: string
+        company:
+          $ref: "#/components/schemas/UserGetResponseCompanyDto"
+        email:
+          type: string
+        enabled:
+          type: boolean
+        id:
+          type: string
+        image:
+          type: string
+        lastLogin:
+          format: date-time
+          type: string
+        lastname:
+          type: string
+        name:
+          type: string
+        sex:
+          $ref: "#/components/schemas/Gender"
+        type:
+          $ref: "#/components/schemas/Type"
+        updatedAt:
+          format: date-time
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - email
+        - enabled
+        - id
+        - image
+        - lastname
+        - name
+        - sex
+        - type
+        - updatedAt
+        - createdAt
+    PaginationOrder:
+      type: string
+      enum:
+        - asc
+        - desc
+    UserGetListRequestSort:
+      type: string
+      enum:
+        - email
+        - name
+        - lastname
+        - lastLogin
+        - createdAt
+        - updatedAt
+    UserGetListResponseDto:
+      type: object
+      properties:
+        count:
+          type: number
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserGetResponseDto"
+      required:
+        - count
+        - items
+    UserUpdateRequestDto:
+      type: object
+      properties:
+        birthday:
+          format: date-time
+          type: string
+        email:
+          type: string
+        lastname:
+          type: string
+        name:
+          type: string
+        sex:
+          $ref: "#/components/schemas/Gender"
+      required:
+        - email
+        - lastname
+        - name
+        - sex
+    UserForceNewPasswordRequestDto:
+      type: object
+      properties:
+        newPassword:
+          type: string
+      required:
+        - newPassword
+    UserChangeTypeRequestDto:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/Type"
+      required:
+        - type
+    UserCreateRequestDto:
+      type: object
+      properties:
+        birthday:
+          format: date-time
+          type: string
+        companyId:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        lastname:
+          type: string
+        name:
+          type: string
+        sex:
+          $ref: "#/components/schemas/Gender"
+        type:
+          $ref: "#/components/schemas/Type"
+      required:
+        - password
+        - email
+        - lastname
+        - name
+        - sex
+        - type
+    UserCreateResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id

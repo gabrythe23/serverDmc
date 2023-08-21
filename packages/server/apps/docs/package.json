@@ -1,0 +1,13 @@
+{
+  "name": "docs",
+  "version": "0.0.1",
+  "description": "boilerplate service",
+  "author": "GabryThe23",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
+  }
+}

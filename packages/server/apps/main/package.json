@@ -1,0 +1,13 @@
+{
+  "name": "server_main",
+  "version": "0.0.1",
+  "description": "dmc server main service",
+  "author": "GabryThe23",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
+  }
+}
